@@ -30,7 +30,7 @@ and `tools/check_site.py` fails on address-like text or an address field.
   `index.html` files.
 - **Check:** `python3 tools/check_site.py` verifies the language and direction, mobile viewport, links, that nothing
   external is loaded, and that there are no secret- or personal-data-like strings. It also lists the placeholders
-  (`class="todo"`). Before publishing, run `SITE_EMAILS=<the contact addresses> python3 tools/check_site.py --publish`;
+  (`class="todo"`). Before publishing, run `EFFECTIVE_DATE=YYYY-MM-DD python3 tools/build.py && python3 tools/check_site.py --publish`;
   it fails while any placeholder is left.
 - **Accuracy:** the texts describe ParkLast 1.1.0 as implemented. Change them only together with the app.
 
