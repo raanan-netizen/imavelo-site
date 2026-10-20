@@ -82,7 +82,11 @@ SECRETS = [
     (r"\b(?:\d[ -]?){13,19}\b", "card-like number"),
     (r"\+?\d{3}[ -]?\d{2,3}[ -]?\d{3}[ -]?\d{3,4}", "phone-like number"),
 ]
-ALLOWED_EMAILS = set(filter(None, os.environ.get("SITE_EMAILS", "").split(",")))
+import json
+CONFIG = json.load(open(os.path.join(ROOT, "site.json"), encoding="utf-8"))
+ALLOWED_EMAILS = {CONFIG.get("privacy_email"), CONFIG.get("support_email")} - {None, ""}
+# The operator's address is private: it must never be in this (public) repository's pages or config.
+ADDRESS_PATTERNS = [r"(?i)\b(street|st\.|road|rd\.|avenue|ave\.|apt\.?|p\.?o\.? box)\s*\d", r"(?:רחוב|רח'|רח׳|ת\.ד\.?|דירה)\s*\d"]
 
 errors, todos = [], []
 found = list(pages())
@@ -124,11 +128,16 @@ for path in sorted(found):
     for pattern, label in SECRETS:
         for m in re.finditer(pattern, text):
             errors.append(f"{rel}: {label}: {m.group(0)[:24]}")
+    for pattern in ADDRESS_PATTERNS:
+        for m in re.finditer(pattern, text):
+            errors.append(f"{rel}: looks like a postal address: {m.group(0)}")
     for m in re.finditer(r"[\w.+-]+@[\w-]+\.[\w.]+", text):
         if m.group(0) not in ALLOWED_EMAILS:
             errors.append(f"{rel}: e-mail address not configured as a site contact: {m.group(0)}")
     todos += [f"{rel}: {t}" for t in p.todo]
 
+if any(k for k in CONFIG if "address" in k.lower()):
+    errors.append("site.json has an address field: the private address must not be in this repository")
 print(f"{len(found)} pages checked")
 if todos:
     print(f"{len(todos)} placeholders to fill:")

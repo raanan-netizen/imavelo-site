@@ -1,0 +1,22 @@
+# Checks every push: the published pages match their sources, and tools/check_site.py passes.
+name: Site check
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Built pages are up to date
+        run: |
+          python3 tools/build.py
+          git diff --exit-code || { echo "::error::Run tools/build.py and commit the result"; exit 1; }
+      - name: Site checks
+        run: python3 tools/check_site.py

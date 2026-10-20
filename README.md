@@ -12,6 +12,18 @@ assets; one stylesheet (`assets/site.css`).
 | Terms of Service | `/parklast/terms/` | `/parklast/terms/he/` |
 | Support | `/parklast/support/` | `/parklast/support/he/` |
 
+## Operator details
+`site.json` holds the public operator details:
+- trade name, legal form, legal name;
+- privacy and support e-mail addresses;
+- minimum age.
+
+The effective date is the real publication day. It is given at publish time:
+`EFFECTIVE_DATE=YYYY-MM-DD python3 tools/build.py`.
+
+**The operator's private postal address is never added here.** The pages say it is available on request by e-mail,
+and `tools/check_site.py` fails on address-like text or an address field.
+
 ## Editing
 - **Sources:** page content lives in `src/<page>.en.html` and `src/<page>.he.html` (body only).
 - **Build:** `python3 tools/build.py` adds the shared header, footer, language switch and metadata, and writes the

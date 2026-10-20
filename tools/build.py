@@ -5,7 +5,9 @@ English is published at /<path>/, Hebrew at /<path>/he/ (the home page: / and /h
 
     python3 tools/build.py
 """
+import datetime
 import html
+import json
 import os
 import re
 
@@ -27,13 +29,58 @@ NAV = {
 }
 
 
+HE_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"]
+
+
+def config():
+    c = json.load(open(os.path.join(ROOT, "site.json"), encoding="utf-8"))
+    # The effective date is the real publication day: EFFECTIVE_DATE=YYYY-MM-DD at publish time overrides site.json.
+    c["effective_date"] = os.environ.get("EFFECTIVE_DATE", c.get("effective_date", "")).strip()
+    return c
+
+
+def todo(label):
+    return f'<span class="todo">[{html.escape(label)}]</span>'
+
+
+def fill(body, lang, c):
+    """Replaces {{TOKENS}} with the operator details; anything not set yet becomes a visible placeholder."""
+    he = lang == "he"
+    date = c.get("effective_date")
+    if date:
+        d = datetime.date.fromisoformat(date)
+        date_text = f"{d.day} ב{HE_MONTHS[d.month - 1]} {d.year}" if he else f"{d.day} {d.strftime('%B %Y')}"
+    else:
+        date_text = todo("תאריך הפרסום בפועל" if he else "PUBLICATION DATE")
+    legal = c.get("legal_name") or ""
+    operator = (
+        f"{html.escape(legal)}, {c['legal_form_he']}, הפועל בשם המסחרי {c['trade_name']}" if he else
+        f"{html.escape(legal)}, {c['legal_form_en']} trading as {c['trade_name']}"
+    ) if legal else (
+        todo("השם המשפטי, כפי שבחשבון Google Play") + f", {c['legal_form_he']}, הפועל בשם המסחרי {c['trade_name']}" if he else
+        todo("LEGAL NAME as in the Google Play account") + f", {c['legal_form_en']} trading as {c['trade_name']}"
+    )
+    mail = lambda a: f'<a class="ltr" href="mailto:{a}">{a}</a>' if a else todo("e-mail")
+    tokens = {
+        "EFFECTIVE_DATE": date_text,
+        "OPERATOR": operator,
+        "PRIVACY_EMAIL": mail(c.get("privacy_email")),
+        "SUPPORT_EMAIL": mail(c.get("support_email")),
+        "MINIMUM_AGE": html.escape(c.get("minimum_age") or "") or todo("age"),
+    }
+    out = re.sub(r"\{\{([A-Z_]+)\}\}", lambda m: tokens[m.group(1)], body)
+    left = re.findall(r"\{\{[A-Z_]+\}\}", out)
+    assert not left, left
+    return out
+
+
 def url(path, lang):
     base = "/" + (path + "/" if path else "")
     return base + ("he/" if lang == "he" else "")
 
 
-def page(slug, path, title, lang):
-    body = open(os.path.join(ROOT, "src", f"{slug}.{lang}.html"), encoding="utf-8").read()
+def page(slug, path, title, lang, c):
+    body = fill(open(os.path.join(ROOT, "src", f"{slug}.{lang}.html"), encoding="utf-8").read(), lang, c)
     other = "he" if lang == "en" else "en"
     direction = "rtl" if lang == "he" else "ltr"
     current = ' aria-current="page"'
@@ -70,12 +117,13 @@ def page(slug, path, title, lang):
 
 
 def main():
+    c = config()
     for slug, path, en, he in PAGES:
         for lang, title in (("en", en), ("he", he)):
             out_dir = os.path.join(ROOT, *[p for p in path.split("/") if p], *(["he"] if lang == "he" else []))
             os.makedirs(out_dir, exist_ok=True)
             with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8", newline="\n") as f:
-                f.write(page(slug, path, title, lang))
+                f.write(page(slug, path, title, lang, c))
             print("built", url(path, lang))
 
 

@@ -1,0 +1,11 @@
+{
+  "_comment": "Public operator details used by tools/build.py. Never put a private home address here: this repository will be public.",
+  "trade_name": "Imavelo",
+  "legal_name": "",
+  "legal_form_en": "an Israeli sole proprietorship (osek murshe)",
+  "legal_form_he": "עוסק מורשה",
+  "privacy_email": "privacy@imavelo.com",
+  "support_email": "support@imavelo.com",
+  "minimum_age": "18",
+  "effective_date": ""
+}
