@@ -1,0 +1,43 @@
+/* Imavelo: one small stylesheet, system fonts only (no external requests, no cookies, no tracking). */
+:root {
+  --bg: #f6f7fb; --card: #ffffff; --text: #1b1d24; --muted: #555b6b; --line: #e3e6ee;
+  --accent: #1d5fd8; --accent-soft: #e6eefc; --todo: #fff1c2; --todo-text: #6b4e00;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111318; --card: #1a1d24; --text: #eceef3; --muted: #a7adbb; --line: #2b2f39;
+    --accent: #8db3ff; --accent-soft: #1d2a45; --todo: #4a3b0a; --todo-text: #ffe08a;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Hebrew", Arial, sans-serif;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+a { color: var(--accent); }
+.top { background: var(--card); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding-top: 12px; padding-bottom: 12px; }
+.brand { font-weight: 700; font-size: 18px; color: var(--text); text-decoration: none; margin-inline-end: auto; }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.top nav a, .lang { text-decoration: none; font-size: 15px; padding: 6px 0; }
+.top nav a[aria-current="page"] { font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.lang { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+main { padding-top: 24px; padding-bottom: 32px; }
+h1 { font-size: 28px; line-height: 1.25; margin: 8px 0 4px; }
+h2 { font-size: 20px; margin: 32px 0 8px; }
+h3 { font-size: 17px; margin: 20px 0 6px; }
+.lead { font-size: 18px; color: var(--muted); }
+.meta { color: var(--muted); font-size: 15px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 4px 18px; margin: 16px 0; }
+ul, ol { padding-inline-start: 22px; }
+li { margin: 4px 0; }
+.table { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; background: var(--card); }
+th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: start; vertical-align: top; }
+th { background: var(--accent-soft); }
+.todo { background: var(--todo); color: var(--todo-text); border-radius: 4px; padding: 0 4px; }
+footer { color: var(--muted); font-size: 14px; padding-bottom: 32px; display: flex; flex-wrap: wrap; gap: 6px 12px; }
+footer a { color: var(--muted); }
+.ltr { direction: ltr; unicode-bidi: isolate; }
