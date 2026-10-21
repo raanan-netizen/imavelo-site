@@ -54,7 +54,7 @@ def fill(body, lang, c):
         date_text = todo("תאריך הפרסום בפועל" if he else "PUBLICATION DATE")
     legal = c.get("legal_name") or ""
     operator = (
-        f"{html.escape(legal)}, {c['legal_form_he']}, הפועל בשם המסחרי {c['trade_name']}" if he else
+        f'<span class="ltr">{html.escape(legal)}</span>, {c["legal_form_he"]}, הפועל בשם המסחרי {c["trade_name"]}' if he else
         f"{html.escape(legal)}, {c['legal_form_en']} trading as {c['trade_name']}"
     ) if legal else (
         todo("השם המשפטי, כפי שבחשבון Google Play") + f", {c['legal_form_he']}, הפועל בשם המסחרי {c['trade_name']}" if he else

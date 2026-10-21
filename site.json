@@ -1,11 +1,12 @@
 {
   "_comment": "Public operator details used by tools/build.py. Never put a private home address here: this repository will be public.",
   "trade_name": "Imavelo",
-  "legal_name": "",
+  "legal_name": "Raanan Herscovici",
   "legal_form_en": "an Israeli sole proprietorship (osek murshe)",
   "legal_form_he": "עוסק מורשה",
-  "privacy_email": "privacy@imavelo.com",
-  "support_email": "support@imavelo.com",
+  "privacy_email": "admin@imavelo.com",
+  "support_email": "admin@imavelo.com",
   "minimum_age": "18",
-  "effective_date": ""
+  "effective_date": "",
+  "_contact_note": "Temporary: both contacts point to admin@imavelo.com (the Google Play account e-mail) until privacy@ and support@ are verified; then change privacy_email and support_email back."
 }
