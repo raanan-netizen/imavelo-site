@@ -8,5 +8,6 @@
   "support_email": "admin@imavelo.com",
   "minimum_age": "18",
   "effective_date": "2026-10-21",
+  "effective_dates": { "privacy": "2026-10-23" },
   "_contact_note": "Temporary: both contacts point to admin@imavelo.com (the Google Play account e-mail) until privacy@ and support@ are verified; then change privacy_email and support_email back."
 }

@@ -21,6 +21,7 @@ PAGES = [
     ("privacy", "parklast/privacy", "ParkLast Privacy Policy", "מדיניות הפרטיות של ParkLast"),
     ("terms", "parklast/terms", "ParkLast Terms of Service", "תנאי השימוש של ParkLast"),
     ("support", "parklast/support", "ParkLast Support", "תמיכה ב־ParkLast"),
+    ("data-deletion", "parklast/data-deletion", "Delete your ParkLast data", "מחיקת המידע שלך ב־ParkLast"),
 ]
 
 NAV = {
@@ -43,10 +44,11 @@ def todo(label):
     return f'<span class="todo">[{html.escape(label)}]</span>'
 
 
-def fill(body, lang, c):
+def fill(body, lang, c, slug=""):
     """Replaces {{TOKENS}} with the operator details; anything not set yet becomes a visible placeholder."""
     he = lang == "he"
-    date = c.get("effective_date")
+    # A page changed after first publication has its own date (site.json "effective_dates"), the others keep theirs.
+    date = c.get("effective_dates", {}).get(slug) or c.get("effective_date")
     if date:
         d = datetime.date.fromisoformat(date)
         date_text = f"{d.day} ב{HE_MONTHS[d.month - 1]} {d.year}" if he else f"{d.day} {d.strftime('%B %Y')}"
@@ -80,7 +82,7 @@ def url(path, lang):
 
 
 def page(slug, path, title, lang, c):
-    body = fill(open(os.path.join(ROOT, "src", f"{slug}.{lang}.html"), encoding="utf-8").read(), lang, c)
+    body = fill(open(os.path.join(ROOT, "src", f"{slug}.{lang}.html"), encoding="utf-8").read(), lang, c, slug)
     other = "he" if lang == "en" else "en"
     direction = "rtl" if lang == "he" else "ltr"
     current = ' aria-current="page"'
